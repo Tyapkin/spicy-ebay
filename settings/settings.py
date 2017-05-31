@@ -130,3 +130,12 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'media'))
+
+
+# email settings
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
+DEFAULT_FROM_EMAIL = 'admin@test.loc'
+
+# registration
+ACCOUNT_ACTIVATION_DAYS = 7

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <p>you logout</p>
+    <p>Login <a href="{% url 'auth_login' %}">again</a></p>
+{% endblock %}
