@@ -1,11 +1,49 @@
-{% extends "base.html" %}
+{% extends "base_auth.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Spicy Ebay | Log In</title>
+{% endblock %}
+
+{% block classes %}class="hold-transition login-page"{% endblock %}
 
 {% block content %}
-<body>
-    <form action="." method="post" name="login_form" id="login_form">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" id="login" value="Login">
-    </form>
-</body>
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="#"><b>Spicy</b>Ebay</a>
+        </div>
+        <!-- /.login-logo -->
+        <div class="login-box-body">
+            {% for error in form.non_field_errors %}
+                <p>{{ error|escape }}</p>
+            {% empty %}
+                <p class="login-box-msg">Sign in to start your session</p>
+            {% endfor %}
+            <form action="." method="post" name="login_form" id="login_form">
+                {% csrf_token %}
+                <div class="form-group has-feedback">
+                    <input type="text" class="form-control" placeholder="Username"
+                           name="username" id="id_username" required autofocus>
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="password" class="form-control" placeholder="Password"
+                           name="password" id="id_password" required>
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="row">
+                    <div class="col-xs-4">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
+
+            <a href="{% url 'auth_password_reset' %}">I forgot my password</a><br>
+            <a href="{% url 'registration_register' %}" class="text-center">Register a new membership</a>
+
+        </div>
+        <!-- /.login-box-body -->
+    </div>
+    <!-- /.login-box -->
 {% endblock %}

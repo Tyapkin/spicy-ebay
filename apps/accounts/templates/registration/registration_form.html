@@ -1,10 +1,73 @@
-{% extends "base.html" %}
+{% extends "base_auth.html" %}
+
+{% block title %}
+    <title>Spice Ebay | Registration</title>
+{% endblock %}
+
+{% block classes %}class="hold-transition register-page"{% endblock %}
 
 {% block content %}
+    <div class="register-box">
+  <div class="register-logo">
+    <a href="#"><b>Spicy</b>Ebay</a>
+  </div>
+
+  <div class="register-box-body">
+      {% for error in form.non_field_errors %}
+          <p class="login-box-msg">{{ error|escape }}</p>
+      {% empty %}
+        <p class="login-box-msg">Register a new membership</p>
+      {% endfor %}
+
     <form action="." method="post" name="registration_form" id="registration_form">
         {% csrf_token %}
-        {{ form }}
-        <input type="submit" id="submit" value="Register">
+      <div class="form-group has-feedback">
+        <input type="text" class="form-control" placeholder="Username"
+               name="username" id="id_username" maxlength="150" required autofocus>
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+          {% for error in form.username.errors %}
+            <span class="text-danger">{{ error }}</span>
+          {% empty %}
+            <span class="help">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</span>
+          {% endfor %}
+      </div>
+      <div class="form-group has-feedback">
+        <input type="email" class="form-control" placeholder="Email"
+               name="email" id="id_email" required>
+        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+          {% for error in form.email.errors %}
+              <span class="text-danger">{{ error }}</span>
+          {% endfor %}
+      </div>
+      <div class="form-group has-feedback">
+        <input type="password" class="form-control" placeholder="Password" name="password1" id="id_password1" required>
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+          {% for error in form.password1.errors %}
+              <span class="test-danger">{{ error }}</span>
+          {% empty %}
+          <span class="help">Your password must contain at least 8 characters</span>
+          {% endfor %}
+      </div>
+      <div class="form-group has-feedback">
+        <input type="password" class="form-control" placeholder="Retype password" name="password2" id="id_password2" required>
+        <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+          {% for error in form.password2.errors %}
+              <span class="text-danger">{{ error }}</span>
+          {% endfor %}
+      </div>
+      <div class="row">
+        <!-- /.col -->
+        <div class="col-xs-4">
+          <button type="submit" id="submit" class="btn btn-primary btn-block btn-flat">Register</button>
+        </div>
+        <!-- /.col -->
+      </div>
     </form>
+
+    <a href="{% url 'auth_login' %}" class="text-center">I already have a membership</a>
+  </div>
+  <!-- /.form-box -->
+</div>
+<!-- /.register-box -->
 
 {% endblock %}

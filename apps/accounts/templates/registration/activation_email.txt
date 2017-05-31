@@ -1,4 +1,9 @@
-{{ activation_key }}
-{{ expiration_days }}
-{{ user }}
-{{ site }}
+You're receiving this e-mail because user {{ user }} at {{ site }} has given yours as an e-mail address to connect their account.
+
+To confirm this is correct, go to {{ site }}/accounts/activate/{{ activation_key }}
+
+Activation period expires in {{ expiration_days }} days.
+
+If you think that an error has occurred, please do not click on the link and do not reply to this email.
+
+Good luck.
