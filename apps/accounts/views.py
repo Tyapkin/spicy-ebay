@@ -19,6 +19,17 @@ class CredentialsVeiw(DetailView):
     template_name = 'credentials_detail.html'
 
     def get_object(self, queryset=None):
-        return Credentials.objects.get(user=self.request.user)
+        try:
+            return Credentials.objects.get(user=self.request.user)
+        except Credentials.DoesNotExist:
+            return
+
+    def get_context_data(self, **kwargs):
+        context = super(CredentialsVeiw, self).get_context_data(**kwargs)
+        if self.object:
+            context['is_empty'] = False
+        else:
+            context['is_empty'] = True
+        return context
 
 
