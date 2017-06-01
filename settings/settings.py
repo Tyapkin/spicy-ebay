@@ -141,5 +141,5 @@ DEFAULT_FROM_EMAIL = 'admin@test.loc'
 # registration
 ACCOUNT_ACTIVATION_DAYS = 7
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/ebay-catalog/'
 LOGOUT_URL = '/accounts/logout/'
