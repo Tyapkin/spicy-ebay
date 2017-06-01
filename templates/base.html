@@ -73,13 +73,24 @@
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-user" aria-hidden="true"></i>
-                            <span class="hidden-xs">{{ object.user }}</span>
+                            <span class="hidden-xs">
+                                {% if profile %}
+                                    {{ profile }}
+                                {% elif credentials %}
+                                    {{ credentials.user }}
+                                {% endif %}
+                            </span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="{% url 'settings' accounts.user.id %}" class="btn btn-default btn-flat">
+                                    {% if profile %}
+                                        {% url 'settings' profile.id as settings_url %}
+                                    {% elif object %}
+                                        {% url 'settings' object.user.id as settings_url %}
+                                    {% endif %}
+                                    <a href="{{ settings_url }}" class="btn btn-default btn-flat">
                                         <i class="fa fa-cog" aria-hidden="true"></i> <span>Settings</span></a>
                                 </div>
                                 <div class="pull-right">

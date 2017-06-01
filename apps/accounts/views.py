@@ -9,7 +9,16 @@ from .models import Credentials
 
 
 class UserSettingsView(DetailView):
-    model = Credentials
+    model = User
     template_name = 'profile_settings.html'
-    context_object_name = 'accounts'
+    context_object_name = 'profile'
+
+
+class CredentialsVeiw(DetailView):
+    context_object_name = 'credentials'
+    template_name = 'credentials_detail.html'
+
+    def get_object(self, queryset=None):
+        return Credentials.objects.get(user=self.request.user)
+
 
