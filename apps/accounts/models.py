@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.contrib.auth.models import User
 
 
@@ -13,3 +14,6 @@ class Credentials(models.Model):
     class Meta:
         verbose_name = 'profile'
         verbose_name_plural = 'profiles'
+
+    def get_absolute_url(self):
+        return reverse('credentials', kwargs={'pk': self.pk})

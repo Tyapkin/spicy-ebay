@@ -1,10 +1,6 @@
-from django.shortcuts import render
-from django.views.generic.detail import DetailView, SingleObjectMixin
-from django.views.generic.base import TemplateView, View
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
-from django.http import HttpResponse
 from .models import Credentials
 
 
@@ -31,5 +27,20 @@ class CredentialsVeiw(DetailView):
         else:
             context['is_empty'] = True
         return context
+
+
+class CredentialsAddView(CreateView):
+    model = Credentials
+    template_name = 'credentials_form.html'
+    fields = ['runame', 'app_id', 'dev_id', 'cert_id']
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(CredentialsAddView, self).form_valid(form)
+
+
+class CredentialsEditView(UpdateView):
+    model = Credentials
+    fields = ['runame', 'app_id', 'dev_id', 'cert_id']
 
 
