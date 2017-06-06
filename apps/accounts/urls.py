@@ -7,7 +7,7 @@ urlpatterns = [
     url(r'^settings/(?P<pk>[0-9]+)/$',
         login_required(UserSettingsView.as_view()), name='settings'),
 
-    url(r'^settings/credentials/(?P<pk>[0-9]+)/$',
+    url(r'^settings/credentials/$',
         CredentialsVeiw.as_view(), name='credentials'),
 
     url(r'^settings/credentials/add/$',

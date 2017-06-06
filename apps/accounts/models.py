@@ -16,4 +16,4 @@ class Credentials(models.Model):
         verbose_name_plural = 'profiles'
 
     def get_absolute_url(self):
-        return reverse('credentials', kwargs={'pk': self.pk})
+        return reverse('credentials')
