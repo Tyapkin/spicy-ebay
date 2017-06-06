@@ -37,7 +37,7 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>Blank page<small>it all starts here</small></h1>
+            <h1>Spicy Ebay<small>Product Catalog</small></h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li><a href="#">Examples</a></li>
@@ -51,7 +51,7 @@
             <!-- Default box -->
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Title</h3>
+                    <h3 class="box-title">Data from Ebay</h3>
 
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool"
@@ -65,19 +65,72 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    Start creating your amazing application!
+                    <div id="data_table_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table id="ebay_data" class="table table-bordered table-hover dataTalbe" role="grid" aria-describedby="data_from_ebay">
+                                    <thead>
+                                    <tr>
+                                        <th>UPC</th>
+                                        <th>Image</th>
+                                        <th>Rating</th>
+                                        <th>Price</th>
+                                        <th>Name</th>
+                                        <th>In stock</th>
+                                        <th>Quantity</th>
+                                        <th>Weight</th>
+                                        <th>Dimensions</th>
+                                        <th>Data updated</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>Exmpl-UPC</td>
+                                        <td><img src="#" alt="Test Image"></td>
+                                        <td>4.5</td>
+                                        <td>19.99</td>
+                                        <td>Test Product</td>
+                                        <td>True</td>
+                                        <td>3</td>
+                                        <td>5.5</td>
+                                        <td>5x3.33x1.9</td>
+                                        <td>2017.04.28</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- /.box-body -->
-                <div class="box-footer">
-                    Footer
-                </div>
-                <!-- /.box-footer-->
             </div>
             <!-- /.box -->
 
         </section>
         <!-- /.content -->
     </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        $(document).ready(function () {
+            $('#ebay_data').DataTable({
+                searching: false,
+                "columns": [
+                    {"orderable": false},
+                    {"orderable": false},
+                    null,
+                    {"orderable": false},
+                    {"orderable": false},
+                    {"orderable": false},
+                    null,
+                    {"orderable": false},
+                    {"orderable": false},
+                    null
+                ]
+            });
+        });
+    </script>
 {% endblock %}
 
 <!-- TODO: complete it -->
