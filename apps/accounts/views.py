@@ -1,5 +1,5 @@
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.models import User
 from .models import Credentials
 
@@ -42,5 +42,8 @@ class CredentialsAddView(CreateView):
 class CredentialsEditView(UpdateView):
     model = Credentials
     fields = ['runame', 'app_id', 'dev_id', 'cert_id']
-
-
+    template_name = 'credentials_form.html'
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(CredentialsEditView, self).form_valid(form)

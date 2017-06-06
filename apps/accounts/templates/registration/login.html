@@ -21,6 +21,7 @@
             {% endfor %}
             <form action="." method="post" name="login_form" id="login_form">
                 {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
                 <div class="form-group has-feedback">
                     <input type="text" class="form-control" placeholder="Username"
                            name="username" id="id_username" required autofocus>

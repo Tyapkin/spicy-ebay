@@ -11,10 +11,10 @@ urlpatterns = [
         CredentialsVeiw.as_view(), name='credentials'),
 
     url(r'^settings/credentials/add/$',
-        CredentialsAddView.as_view(), name='add_credentials'),
+        login_required(CredentialsAddView.as_view()), name='add_credentials'),
 
     url(r'^settings/credentials/edit/(?P<pk>[0-9]+)/$',
-        CredentialsEditView.as_view(), name='edit_credentials'),
+        login_required(CredentialsEditView.as_view()), name='edit_credentials'),
 
     url(r'^', include('registration.backends.hmac.urls')),
 ]
