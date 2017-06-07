@@ -144,3 +144,8 @@ LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/ebay-catalog/'
 LOGOUT_URL = '/accounts/logout/'
 LOGOUT_REDIRECT_URL = LOGIN_URL
+
+
+# ebay api
+PRODUCTION_ENDPOINT = 'http://svcs.ebay.com/services/search/FindingService/v1'
+SANDBOX_ENDPOINT = 'http://svcs.sandbox.ebay.com/services/search/FindingService/v1'
