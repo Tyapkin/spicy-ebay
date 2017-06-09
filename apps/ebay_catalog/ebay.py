@@ -13,20 +13,31 @@ TYPES = {
 STATUS = 'Success'
 
 SELECTORS = {
+    # getSingleItem
     'details': 'Details',
     'description': 'Description',
     'itemspecifics': 'ItemSpecifics',
     'shippingcost': 'ShippingCosts',
-    'variations': 'Variations'
+    'variations': 'Variations',
+    # findItemsByProduct
+    'aspecthistogram': 'AspectHistogram',
+    'categoryhistogram': 'CategoryHistogram',
+    'conditionhistogram': 'ConditionHistogram',
+    'galleryinfo': 'GalleryInfo',
+    'pic_url_large': 'PictureURLLarge',
+    'sellerinfo': 'SellerInfo',
+    'storeinfo': 'StoreInfo',
+    'unitpriceinfo': 'UnitPriceInfo'
 }
 
 
 class GetProductByUPC:
-    def __init__(self, app_id, id_type='upc', endpoint=settings.PRODUCTION_ENDPOINT):
+    def __init__(self, app_id, id_type='upc', endpoint=settings.PRODUCTION_ENDPOINT, selector='sellerinfo'):
         self.app_id = app_id
         self.endpoint = endpoint
         self.product_id_type = TYPES[id_type]
         self.test_product_id = '858978005271'
+        self.selector = selector
         self.session = requests.Session()
 
     def get_payload(self):
@@ -36,6 +47,7 @@ class GetProductByUPC:
             'SECURITY-APPNAME': self.app_id,
             'RESPONSE-DATA-FORMAT': 'JSON',
             'REST-PAYLOAD': None,
+            'outputSelector': SELECTORS[self.selector],
             'productId.@type': self.product_id_type,
             'productId': self.test_product_id
         }
