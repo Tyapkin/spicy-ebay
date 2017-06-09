@@ -12,6 +12,14 @@ TYPES = {
 
 STATUS = 'Success'
 
+SELECTORS = {
+    'details': 'Details',
+    'description': 'Description',
+    'itemspecifics': 'ItemSpecifics',
+    'shippingcost': 'ShippingCosts',
+    'variations': 'Variations'
+}
+
 
 class GetProductByUPC:
     def __init__(self, app_id, id_type='upc', endpoint=settings.PRODUCTION_ENDPOINT):
@@ -71,3 +79,47 @@ class GetProductByUPC:
                 print(content['errorMessage'])
         else:
             return 'Error'
+
+
+class GetSingleItem:
+    def __init__(self, app_id, endpoint='http://open.api.ebay.com/shopping', selector='details'):
+        self.app_id = app_id
+        self.endpoint = endpoint
+        self.test_product_id = '322544108389'
+        self.session = requests.Session()
+        self.selector = SELECTORS[selector]
+
+    def get_payload(self, item_id):
+        payload = {
+            'callname': 'GetSingleItem',
+            'responseencoding': 'JSON',
+            'appid': self.app_id,
+            'siteid': '77',
+            'version': '967',
+            'ItemID': item_id,
+            'IncludeSelector': self.selector
+        }
+        return payload
+
+    def get_product(self, item_id):
+        payload = self.get_payload(item_id)
+        session = requests.Session()
+        resp = session.request('GET', self.endpoint, params=payload)
+
+        if resp.status_code == requests.codes.ok:
+            product = json.loads(resp.text)
+            if product['Ack'] == STATUS:
+                return product['Item']
+            else:
+                print('{}: {} Classification: {}'.format(product['Errors']['SeverityCode'],
+                                                         product['Errors']['ShortMessage'],
+                                                         product['Errors']['ErrorClassification']))
+                return 'Error'
+        else:
+            return 'Error'
+
+
+# TODO: delete this
+from apps.accounts.models import Credentials
+
+client = Credentials.objects.get(user__username='alex')
