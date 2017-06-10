@@ -69,23 +69,15 @@ class GetProductByUPC:
             content = json.loads(response.text)['findItemsByProductResponse'][0]
             if content['ack'][0] == STATUS:
                 results = []
-                for i in range(0, len(content['searchResult'][0]['item'])):
+                for i in range(0, int(content['searchResult'][0]['@count'])):
                     try:
                         results.append({
-                            'upc': content['searchResult'][0]['item'][i]['itemId'][0],
-                            'img': content['searchResult'][0]['item'][i]['galleryURL'][0],
-                            'rating': content['searchResult'][0]['item'][i]['sellerInfo'][0]['feedbackScore'][0],
-                            'price': content['searchResult'][0]['item'][i]['currentPrice'][0]['__value__'],
-                            'title': content['searchResult'][0]['item'][i]['title'][0],
-                            'in_stock': True if content['searchResult'][0]['item'][i]['sellingStatus'][0]['sellingState'][0] == 'Active' else False,
-                            # 'qty': 0,
-                            # 'weight': 0,
-                            # 'dims': 0,
-                            'date_updated': date.today()
+                            'upc': product_id,
+                            'itemId': content['searchResult'][0]['item'][i]['itemId'][0]
                         })
                     except Exception as e:
                         print(e)
-                        pass
+                        continue
                 return results
             else:
                 print(content['errorMessage'])
@@ -123,9 +115,9 @@ class GetSingleItem:
             if product['Ack'] == STATUS:
                 return product['Item']
             else:
-                print('{}: {} Classification: {}'.format(product['Errors']['SeverityCode'],
-                                                         product['Errors']['ShortMessage'],
-                                                         product['Errors']['ErrorClassification']))
+                print('{}: {} Classification: {}'.format(product['Errors'][0]['SeverityCode'],
+                                                         product['Errors'][0]['ShortMessage'],
+                                                         product['Errors'][0]['ErrorClassification']))
                 return 'Error'
         else:
             return 'Error'
@@ -135,3 +127,9 @@ class GetSingleItem:
 from apps.accounts.models import Credentials
 
 client = Credentials.objects.get(user__username='alex')
+
+call = GetProductByUPC(client.app_id)
+
+call2 = GetSingleItem(client.app_id)
+
+from pprint import pprint
