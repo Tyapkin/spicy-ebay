@@ -13,7 +13,7 @@
             <ul class="sidebar-menu">
                 <li class="header">MAIN NAVIGATION</li>
                 <li>
-                    <a href="#">
+                    <a href="#" data-toggle="modal" data-target="#myModal">
                         <i class="fa fa-plus-circle"></i> <span>New Item</span>
                     </a>
                 </li>
@@ -34,6 +34,9 @@
 {% endblock %}
 
 {% block content %}
+
+    {% include "modal_add_item_form.html" %}
+
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
