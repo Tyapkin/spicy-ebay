@@ -149,3 +149,4 @@ LOGOUT_REDIRECT_URL = LOGIN_URL
 # ebay api
 PRODUCTION_ENDPOINT = 'http://svcs.ebay.com/services/search/FindingService/v1'
 SANDBOX_ENDPOINT = 'http://svcs.sandbox.ebay.com/services/search/FindingService/v1'
+SHOPPING_API_ENDPOINT = 'http://open.api.ebay.com/shopping'

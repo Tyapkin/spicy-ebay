@@ -1,7 +1,6 @@
 from django.conf import settings
 import requests
 import json
-from datetime import date
 
 
 TYPES = {
@@ -86,7 +85,7 @@ class GetProductByUPC:
 
 
 class GetSingleItem:
-    def __init__(self, app_id, endpoint='http://open.api.ebay.com/shopping', selector='details'):
+    def __init__(self, app_id, endpoint=settings.SHOPPING_API_ENDPOINT, selector='details'):
         self.app_id = app_id
         self.endpoint = endpoint
         self.test_product_id = '322544108389'
@@ -121,15 +120,3 @@ class GetSingleItem:
                 return 'Error'
         else:
             return 'Error'
-
-
-# TODO: delete this
-from apps.accounts.models import Credentials
-
-client = Credentials.objects.get(user__username='alex')
-
-call = GetProductByUPC(client.app_id)
-
-call2 = GetSingleItem(client.app_id)
-
-from pprint import pprint
