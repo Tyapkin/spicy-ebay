@@ -116,25 +116,7 @@
 
 {% block extra_js %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.1/jquery.form.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#ebay_data').DataTable({
-                searching: false,
-                "columns": [
-                    {"orderable": false},
-                    {"orderable": false},
-                    null,
-                    {"orderable": false},
-                    {"orderable": false},
-                    {"orderable": false},
-                    null,
-                    {"orderable": false},
-                    {"orderable": false},
-                    null
-                ]
-            });
-        });
-    </script>
+    <script src="{% static 'js/ebay_catalog/main.js' %}"></script>
 {% endblock %}
 
 <!-- TODO: complete it -->
