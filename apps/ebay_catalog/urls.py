@@ -1,7 +1,15 @@
 from django.conf.urls import url
+from django.contrib.auth.decorators import login_required
 
-from .views import index
+from .views import ProductListView, ProductDetailView, ProductCreatedView, ProductUpdateView
 
 urlpatterns = [
-    url(r'^$', index, name='index'),
+    url(r'^$', login_required(ProductListView.as_view()), name='index'),
+
+    url(r'^product/(?P<pk>[0-9]+)/detail/$',
+        login_required(ProductDetailView.as_view()), name='product_detail'),
+
+    url(r'^product/add/$', ProductCreatedView.as_view(), name='create_product'),
+
+    url(r'^product/(?P<pk>[0-9]+)/edit/$', ProductUpdateView.as_view(), name='product_edit')
 ]

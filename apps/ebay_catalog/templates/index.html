@@ -13,7 +13,7 @@
             <ul class="sidebar-menu">
                 <li class="header">MAIN NAVIGATION</li>
                 <li>
-                    <a href="#" data-toggle="modal" data-target="#myModal">
+                    <a href="{% url 'create_product' %}" id="new_product_form_link">
                         <i class="fa fa-plus-circle"></i> <span>New Item</span>
                     </a>
                 </li>
@@ -35,7 +35,7 @@
 
 {% block content %}
 
-    {% include "modal_add_item_form.html" %}
+    {% include "modal_boilerplate.html" %}
 
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -115,6 +115,7 @@
 {% endblock %}
 
 {% block extra_js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.1/jquery.form.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#ebay_data').DataTable({

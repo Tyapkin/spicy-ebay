@@ -1,4 +1,6 @@
 from django.db import models
+from django.urls import reverse
+
 from apps.accounts.models import Credentials
 
 
@@ -25,3 +27,6 @@ class Product(models.Model):
 
     def __str__(self):
         return '{}: UPC: {}; Product ID: {}'.format(self.name, self.upc, self.product_id)
+
+    def get_absolute_url(self):
+        return reverse('product_detail', kwargs={'pk': self.pk})
