@@ -30,3 +30,9 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('product_detail', kwargs={'pk': self.pk})
+
+    def save(self, *args, **kwargs):
+        # If qty > 0 then set in_stock to True
+        if self.qty > 0:
+            self.in_stock = True
+        super(Product, self).save(*args, **kwargs)
