@@ -44,29 +44,32 @@ function initProductEditForm(form, modal) {
         return false;
     });
     // make form work in ajax mode
-    form.ajaxForm({
-        'dataType': 'html',
-        'error': function () {
-            alert('Server Error! Try again later.')
-            return false;
-        },
-        'success': function(data, status, xhr) {
-            var html = $(data), newform = html.find('form');
-            // copy alert to modal window
-            modal.find('.modal-body').html(html.find('.alert'));
-            // copy form to modal if we found it in server response
-            if (newform.length > 0) {
-                modal.find('.modal-body').append(newform);
-                // initialize form fields and buttons
-                initProductEditForm(newform, modal);
-            } else {
+    form.find('button[name="add_button"]').click(function (event) {
+        var btn = $(this).button('loading');
+        form.ajaxForm({
+            'dataType': 'html',
+            'error': function () {
+                alert('Server Error! Try again later.')
+                return false;
+            },
+            'success': function(data, status, xhr) {
+                var html = $(data), newform = html.find('form');
+                // copy alert to modal window
+                modal.find('.modal-body').html(html.find('.alert'));
+                // copy form to modal if we found it in server response
+                if (newform.length > 0) {
+                    modal.find('.modal-body').append(newform);
+                    // initialize form fields and buttons
+                    initProductEditForm(newform, modal);
+                } else {
                 /* if no form, it means success and we need to reload page
                 * to get update product list;
                 * reload after 2 seconds, so that user can read
                 * success message */
-                setTimeout(function() {location.reload(true);}, 500);
+                    setTimeout(function() {location.reload(true);}, 500);
+                }
             }
-        }
+        });
     });
 }
 
