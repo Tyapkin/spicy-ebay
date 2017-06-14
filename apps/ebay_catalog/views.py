@@ -1,5 +1,6 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+import sys, traceback
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, View
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
@@ -17,47 +18,40 @@ class ProductDetailView(DetailView):
     template_name = 'product_detail.html'
 
 
-class ProductCreatedView(CreateView):
-    model = Product
-    template_name = 'product_form.html'
-    fields = ['upc']
+class ProductCreatedView(View):
     success_msg = 'Products with UPC {} are stored in a database. Successfully saved: {}; Missed {}'
+    items_added = 0
+    items_missed = 0
 
-    def post(self, request, *args, **kwargs):
-        success_added = 0
-        unsuccess_added = 0
-        if request.POST.get('add_button') is not None:
-            call = GetProductByUPC(self.request.user.credentials.app_id)
-            call2 = GetSingleItem(self.request.user.credentials.app_id)
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.method == 'POST':
+            product_by_upc = GetProductByUPC(self.request.user.credentials.app_id)
+            single_item = GetSingleItem(self.request.user.credentials.app_id)
             product_id = self.request.POST.get('upc')
-            product_list = call.get_product(product_id)
-            for item in product_list:
-                product = call2.get_product(item['itemId'])
+            products_list = product_by_upc.get_product(product_id)
+            for item in products_list:
+                product = single_item.get_product(item['itemId'])
                 try:
-                    Product.objects.create(
+                    Product.objects.update_or_create(
                         owner=self.request.user.credentials,
                         upc=item['upc'],
                         product_id=product['ItemID'],
-                        image=product['GalleryURL'],
-                        rating=product['Seller']['FeedbackScore'],
-                        price=product['CurrentPrice']['Value'],
-                        name=product['Title'],
-                        qty=product['Quantity']
+                        defaults={
+                            'image': product['GalleryURL'],
+                            'rating': product['Seller']['FeedbackScore'],
+                            'price': product['CurrentPrice']['Value'],
+                            'name': product['Title'],
+                            'qty': product['Quantity']
+                        }
                     )
-                    success_added += 1
+                    self.items_added += 1
                 except Exception as e:
-                    unsuccess_added += 1
+                    self.items_missed += 1
                     continue
-            self.success_msg = self.success_msg.format(product_id, success_added, unsuccess_added)
-            return super(ProductCreatedView, self).post(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        form.instance.owner = self.request.user.credentials
-        return super(ProductCreatedView, self).form_valid(form)
-
-    def get_success_url(self):
-        messages.success(self.request, self.success_msg)
-        return reverse('index')
+            messages.success(self.request, self.success_msg.format(product_id, self.items_added, self.items_missed))
+            return redirect(reverse('index'))
+        elif self.request.method == 'GET':
+            return render(self.request, 'product_form.html', {})
 
 
 class ProductUpdateView(UpdateView):
