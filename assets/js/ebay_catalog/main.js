@@ -73,24 +73,34 @@ function initProductEditForm(form, modal) {
     });
 }
 
-$(document).ready(function () {
-    // DataTables init
+function initProductsListPage() {
     $('#ebay_data').DataTable({
-        searching: false,
-        "columns": [
-            {"orderable": false},
-            {"orderable": false},
-            null,
-            {"orderable": false},
-            {"orderable": false},
-            {"orderable": false},
-            null,
-            {"orderable": false},
-            {"orderable": false},
-            null
+        'searching': false,
+        'ajax': {
+            'url': '/ebay-catalog/get_products/',
+            'type': 'GET',
+            'dataSrc': ''
+        },
+        'columns': [
+            {'data': 'fields.product_id', 'orderable': false},
+            {'data': 'fields.image', 'orderable': false},
+            {'data': 'fields.rating', 'orderable': true},
+            {'data': 'fields.price', 'orderable': false},
+            {'data': 'fields.name', 'orderable': false},
+            {'data': 'fields.in_stock', 'orderable': false},
+            {'data': 'fields.qty', 'orderable': true},
+            {'data': 'fields.weight', 'orderable': false},
+            {'data': 'fields.length', 'orderable': false},
+            {'data': 'fields.width', 'orderable': false},
+            {'data': 'fields.height', 'orderable': false},
+            {'data': 'fields.date_updated', 'orderable': true},
         ]
     });
+}
 
+$(document).ready(function () {
+    // DataTables init
+    initProductsListPage();
     // Product Form modal init
     initEditProductPage();
 });

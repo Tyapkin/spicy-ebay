@@ -1,21 +1,27 @@
-import sys, traceback
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, View
+from django.views.generic import View, TemplateView
 from django.core.urlresolvers import reverse
+from django.core import serializers
 from django.contrib import messages
+from django.http import HttpResponse, Http404
 
 from .models import Product
 from .ebay import GetProductByUPC, GetSingleItem
 
 
-class ProductListView(ListView):
-    model = Product
+class IndexView(TemplateView):
     template_name = 'index.html'
 
 
-class ProductDetailView(DetailView):
-    model = Product
-    template_name = 'product_detail.html'
+class GetProductsListView(View):
+
+    def get(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            queryset = Product.objects.all()
+            json_data = serializers.serialize('json', queryset)
+            return HttpResponse(json_data, content_type='application/json')
+        else:
+            raise Http404()
 
 
 class ProductCreatedView(View):
@@ -46,19 +52,10 @@ class ProductCreatedView(View):
                     )
                     self.items_added += 1
                 except Exception as e:
+                    # TODO: logging needs
                     self.items_missed += 1
                     continue
             messages.success(self.request, self.success_msg.format(product_id, self.items_added, self.items_missed))
             return redirect(reverse('index'))
         elif self.request.method == 'GET':
             return render(self.request, 'product_form.html', {})
-
-
-class ProductUpdateView(UpdateView):
-    model = Product
-    template_name = 'product_form.html'
-    fields = ['upc', 'product_id']
-
-    def form_valid(self, form):
-        form.instance.owner = self.request.user.credentials
-        return super(ProductUpdateView, self).form_valid(form)
