@@ -1,3 +1,5 @@
+import csv
+from datetime import date
 from django.shortcuts import render, redirect
 from django.views.generic import View, TemplateView
 from django.core.urlresolvers import reverse
@@ -59,3 +61,28 @@ class ProductCreatedView(View):
             return redirect(reverse('index'))
         elif self.request.method == 'GET':
             return render(self.request, 'product_form.html', {})
+
+
+def export_csv(request):
+    resp = HttpResponse(content_type='text/csv')
+    resp['Content-Disposition'] = 'attachment; filename="products_list.csv"'
+    writer = csv.writer(resp)
+    writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
+    writer.writerow(['Second row', 'A', 'B', 'C', 'Testing', 'Here`s a quote'])
+    return resp
+
+
+class CsvProcessingView(View):
+
+    csvfile = 'products_list_{}_{}.csv'
+
+    def get(self, request, *args, **kwargs):
+        products = Product.objects.filter(owner=self.request.user.credentials)
+        products_ids = [p.product_id for p in products]
+        csvfile = self.csvfile.format(self.request.user.credentials, date.today())
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(csvfile)
+        writer = csv.writer(response)
+        for pid in products_ids:
+            writer.writerow([pid])
+        return response
