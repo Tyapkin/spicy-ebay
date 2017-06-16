@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.core import serializers
 from django.contrib import messages
 from django.http import HttpResponse, Http404
+from django.conf import settings
 
 from .models import Product
 from .ebay import GetProductByUPC, GetSingleItem
@@ -63,16 +64,7 @@ class ProductCreatedView(View):
             return render(self.request, 'product_form.html', {})
 
 
-def export_csv(request):
-    resp = HttpResponse(content_type='text/csv')
-    resp['Content-Disposition'] = 'attachment; filename="products_list.csv"'
-    writer = csv.writer(resp)
-    writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
-    writer.writerow(['Second row', 'A', 'B', 'C', 'Testing', 'Here`s a quote'])
-    return resp
-
-
-class CsvProcessingView(View):
+class CsvExportView(View):
 
     csvfile = 'products_list_{}_{}.csv'
 
@@ -86,3 +78,23 @@ class CsvProcessingView(View):
         for pid in products_ids:
             writer.writerow([pid])
         return response
+
+
+class CsvImportView(View):
+
+    csvfilename = 'imported_list.csv'
+
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'csv_import_form.html', {})
+
+    def post(self, request, *args, **kwargs):
+        csvfile = self.request.FILES['csv']
+        self.handle_upload_file(csvfile)
+        messages.success(self.request, 'File Successfully upload')
+        return redirect(reverse('index'))
+
+    def handle_upload_file(self, f):
+        csvfilepath = settings.MEDIA_ROOT + '/' + self.csvfilename
+        with open(csvfilepath, 'wb+') as destination:
+            for chunk in f.chunks():
+                destination.write(chunk)

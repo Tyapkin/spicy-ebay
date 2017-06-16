@@ -37,6 +37,63 @@ function initEditProductPage() {
     });
 }
 
+function initCsvImportPage() {
+    $('a#upload_csv').click(function(event) {
+        var link = $(this);
+        $.ajax({
+            'url': link.attr('href'),
+            'dataType': 'html',
+            'type': 'get',
+            'success': function (data, status, xhr) {
+                if (status != 'success') {
+                    alert('Server Error! Try again later');
+                    return false;
+                }
+                var modal = $('#myModal'), html = $(data), form = html.find('form');
+                modal.find('.modal-body').html(form);
+                initCsvImportForm(form, modal);
+                modal.modal({
+                    'keyboard': false,
+                    'backdrop': false,
+                    'show': true
+                });
+            },
+            'error': function() {
+                alert('Server Error! Try again later');
+                return false;
+            }
+        });
+        return false;
+    });
+}
+
+function initCsvImportForm(form, modal) {
+    form.find('button[name="cancel_button"]').click(function(event) {
+        modal.modal('hide');
+        return false;
+    });
+    form.find('button[name="upload_button"]').click(function(event) {
+        var btn = $(this).button('loading');
+        form.ajaxForm({
+            'dataType': 'html',
+            'error': function () {
+                alert('Server Error! Try again later.');
+                return false;
+            },
+            'success': function(data, status, xhr) {
+                var html = $(data), newform = html.find('form');
+                modal.find('.modal-body').html(html.find('.alert'));
+                if (newform.length > 0) {
+                    modal.find('.modal-body').append(newform);
+                    initCsvImportForm(newform, modal);
+                } else {
+                    setTimeout(function() {location.reload(true);}, 500);
+                }
+            }
+        });
+    });
+}
+
 function initProductEditForm(form, modal) {
     // close modal window on Cancel button click
     form.find('button[name="cancel_button"]').click(function(event) {
@@ -103,4 +160,6 @@ $(document).ready(function () {
     initProductsListPage();
     // Product Form modal init
     initEditProductPage();
+    // Import csv import page
+    initCsvImportPage();
 });

@@ -1,7 +1,8 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 
-from .views import IndexView, ProductCreatedView, GetProductsListView, CsvProcessingView
+from .views import IndexView, ProductCreatedView, GetProductsListView,\
+    CsvExportView, CsvImportView
 
 urlpatterns = [
     url(r'^$', login_required(IndexView.as_view()), name='index'),
@@ -12,6 +13,9 @@ urlpatterns = [
     url(r'^get_products/$',
         GetProductsListView.as_view(), name='get_products_list'),
 
-    url(r'^csv_processing/$',
-        login_required(CsvProcessingView.as_view()), name='csv_processing'),
+    url(r'^csv_export/$',
+        login_required(CsvExportView.as_view()), name='csv_export'),
+
+    url(r'^csv_import/$',
+        login_required(CsvImportView.as_view()), name='csv_import')
 ]

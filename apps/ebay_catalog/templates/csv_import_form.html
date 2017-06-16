@@ -1,0 +1,24 @@
+{% extends "index.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<form class="form-horizontal" method="post" action="{% url 'csv_import' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_csv" class="col-sm-2 control-label">Import CSV</label>
+        <div class="col-sm-10">
+            <input type="file" class="form-control" name="csv" id="id_csv" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary" id="upload_button" name="upload_button"
+                    data-loading-text="Uploading..." onautocomplete="off">Upload</button>
+            <button type="button" class="btn btn-default" name="cancel_button">Cancel</button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
