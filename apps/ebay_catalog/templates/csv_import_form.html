@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block content %}
+<!-- TODO: needs link to download example.csv -->
 
 <form class="form-horizontal" method="post" action="{% url 'csv_import' %}" enctype="multipart/form-data">
     {% csrf_token %}

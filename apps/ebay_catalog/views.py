@@ -96,10 +96,8 @@ class CsvImportView(View):
         csv = self.open_and_read_csv(self.handle_upload_file(csvfile))
 
         for row in csv:
-            print('ROW: {}'.format(row))
             try:
                 item = get_single_item.get_product(row)
-                print(item)
                 Product.objects.update_or_create(
                     owner=self.request.user.credentials,
                     product_id=item['ItemID'],

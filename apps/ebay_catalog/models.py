@@ -10,7 +10,7 @@ class Product(models.Model):
     product_id = models.CharField(max_length=12, null=True)
     image = models.URLField(blank=True)
     rating = models.FloatField(blank=True, null=True)
-    price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    price = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
     name = models.CharField(max_length=254, blank=True)
     in_stock = models.BooleanField(default=False)
     qty = models.IntegerField(blank=True, null=True, default=0)

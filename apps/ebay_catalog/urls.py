@@ -17,5 +17,5 @@ urlpatterns = [
         login_required(CsvExportView.as_view()), name='csv_export'),
 
     url(r'^csv_import/$',
-        login_required(CsvImportView.as_view()), name='csv_import')
+        login_required(CsvImportView.as_view()), name='csv_import'),
 ]
