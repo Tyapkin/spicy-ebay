@@ -83,18 +83,58 @@ class CsvExportView(View):
 class CsvImportView(View):
 
     csvfilename = 'imported_list.csv'
+    success_item = 0
+    missed_item = 0
+    msg = 'CSV successfully imported. Stored to DB: {}; Missed: {}'
 
     def get(self, request, *args, **kwargs):
         return render(self.request, 'csv_import_form.html', {})
 
     def post(self, request, *args, **kwargs):
+        get_single_item = GetSingleItem(self.request.user.credentials.app_id)
         csvfile = self.request.FILES['csv']
-        self.handle_upload_file(csvfile)
-        messages.success(self.request, 'File Successfully upload')
+        csv = self.open_and_read_csv(self.handle_upload_file(csvfile))
+
+        for row in csv:
+            print('ROW: {}'.format(row))
+            try:
+                item = get_single_item.get_product(row)
+                print(item)
+                Product.objects.update_or_create(
+                    owner=self.request.user.credentials,
+                    product_id=item['ItemID'],
+                    defaults={
+                        'image': item['GalleryURL'],
+                        'rating': item['Seller']['FeedbackScore'],
+                        'price': item['CurrentPrice']['Value'],
+                        'name': item['Title'],
+                        'qty': item['Quantity']
+                    }
+                )
+                self.success_item += 1
+            except Exception as e:
+                print(e)
+                self.missed_item += 1
+                continue
+        messages.success(self.request, self.msg.format(self.success_item, self.missed_item))
         return redirect(reverse('index'))
 
     def handle_upload_file(self, f):
         csvfilepath = settings.MEDIA_ROOT + '/' + self.csvfilename
+
         with open(csvfilepath, 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
+
+        return csvfilepath
+
+    def open_and_read_csv(self, filepath):
+        csvreader = None
+
+        try:
+            csvfile = open(filepath, newline='')
+            csvreader = csv.reader(csvfile, delimiter='\n')
+        except IOError:
+            raise IOError
+
+        return csvreader
