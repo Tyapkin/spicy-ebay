@@ -26,7 +26,7 @@ class Product(models.Model):
         ordering = ['rating', 'qty', 'date_updated']
 
     def __str__(self):
-        return '{}: UPC: {}; Product ID: {}'.format(self.name, self.upc, self.product_id)
+        return '{}: Product ID: {}'.format(self.name, self.product_id)
 
     def get_absolute_url(self):
         return reverse('product_detail', kwargs={'pk': self.pk})
