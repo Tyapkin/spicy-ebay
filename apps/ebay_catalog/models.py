@@ -6,7 +6,7 @@ from apps.accounts.models import Credentials
 
 class Product(models.Model):
     owner = models.ForeignKey(Credentials, on_delete=models.CASCADE)
-    upc = models.CharField(max_length=12)
+    upc = models.CharField(max_length=12, blank=True)
     product_id = models.CharField(max_length=12, null=True)
     image = models.URLField(blank=True)
     rating = models.FloatField(blank=True, null=True)
