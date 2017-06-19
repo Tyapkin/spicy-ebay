@@ -147,10 +147,8 @@ function initProductsListPage() {
             {'data': 'fields.in_stock', 'orderable': false},
             {'data': 'fields.qty', 'orderable': true},
             {'data': 'fields.weight', 'orderable': false},
-            {'data': 'fields.length', 'orderable': false},
-            {'data': 'fields.width', 'orderable': false},
-            {'data': 'fields.height', 'orderable': false},
             {'data': 'fields.date_updated', 'orderable': true},
+            {'data': 'pk'}
         ],
         'columnDefs': [
             {
@@ -169,6 +167,17 @@ function initProductsListPage() {
                     } else {
                         return '<i class="fa fa-times-circle-o" aria-hidden="true"></i>';
                     }
+                }
+            },
+            {
+                'targets': 9,
+                'data': 'pk',
+                'render': function (data, type, full, meta) {
+                    // get link prod + pid + del. Result: product/619/delete/
+                    var pid = data;
+                    var prod = 'product/';
+                    var del = '/delete/';
+                    return '<a href="' + prod + pid + del + '" id="delete_link"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
                 }
             }
         ],

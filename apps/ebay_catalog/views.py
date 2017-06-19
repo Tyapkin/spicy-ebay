@@ -1,8 +1,9 @@
 import csv, os
 from datetime import date
 from django.shortcuts import render, redirect
-from django.views.generic import View, TemplateView
-from django.core.urlresolvers import reverse
+from django.views.generic import View, TemplateView, DeleteView
+from django.views.generic.base import ContextMixin
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.core import serializers
 from django.contrib import messages
 from django.http import HttpResponse, Http404
@@ -20,7 +21,7 @@ class GetProductsListView(View):
 
     def get(self, request, *args, **kwargs):
         if self.request.is_ajax():
-            queryset = Product.objects.all()
+            queryset = Product.objects.filter(owner=self.request.user.credentials)
             json_data = serializers.serialize('json', queryset)
             return HttpResponse(json_data, content_type='application/json')
         else:
@@ -136,6 +137,12 @@ class CsvImportView(View):
             raise IOError
 
         return csvreader
+
+
+class DeleteProductView(DeleteView):
+    model = Product
+    template_name = 'product_delete_form.html'
+    success_url = reverse_lazy('index')
 
 
 def download(request, path):
