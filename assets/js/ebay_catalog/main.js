@@ -151,7 +151,27 @@ function initProductsListPage() {
             {'data': 'fields.width', 'orderable': false},
             {'data': 'fields.height', 'orderable': false},
             {'data': 'fields.date_updated', 'orderable': true},
-        ]
+        ],
+        'columnDefs': [
+            {
+                'targets': 1, 
+                'data': 'fields.image', 
+                'render': function (data, type, full, meta) {
+                    return '<img src="' + data + '">';
+                }
+            },
+            {
+                'targets': 5,
+                'data': 'fields.in_stock',
+                'render': function (data, type, full, meta) {
+                    if (data == true) {
+                        return '<i class="fa fa-check-circle-o" aria-hiddent="true"></i>';
+                    } else {
+                        return '<i class="fa fa-times-circle-o" aria-hidden="true"></i>';
+                    }
+                }
+            }
+        ],
     });
 }
 
