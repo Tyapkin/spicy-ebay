@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 
 from .views import IndexView, ProductCreatedView, GetProductsListView,\
-    CsvExportView, CsvImportView
+    CsvExportView, CsvImportView, download
 
 urlpatterns = [
     url(r'^$', login_required(IndexView.as_view()), name='index'),
@@ -18,4 +18,6 @@ urlpatterns = [
 
     url(r'^csv_import/$',
         login_required(CsvImportView.as_view()), name='csv_import'),
+
+    url(r'^download/(?P<path>.+)$', download, name='download')
 ]

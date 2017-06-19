@@ -1,4 +1,4 @@
-import csv
+import csv, os
 from datetime import date
 from django.shortcuts import render, redirect
 from django.views.generic import View, TemplateView
@@ -136,3 +136,16 @@ class CsvImportView(View):
             raise IOError
 
         return csvreader
+
+
+def download(request, path):
+    # TODO: fix it. This not work.
+    file_path = settings.DOWNLOADABLE_FILES + '/' + path
+    print(file_path)
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type='application/force-download')
+            response['Content-Disposition'] = 'inline; filename={}'.format(file_path)
+            return response
+    else:
+        raise Http404

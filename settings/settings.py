@@ -131,6 +131,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'media'))
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'assets'),)
+DOWNLOADABLE_FILES = os.path.abspath(os.path.join(BASE_DIR, 'files'))
 
 
 # email settings
