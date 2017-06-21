@@ -163,9 +163,8 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Europe/Kiev'
 
 CELERYBEAT_SCHEDULE = {
-    'add-every-day': {
-        'task': 'apps.ebay_catalog.tasks.add',
-        'schedule': crontab(minute='*/1'),
-        'args': (2, 2)
-    }
+    'auto_update_every_five_minutes': {
+        'task': 'apps.ebay_catalog.tasks.auto_update_all_products',
+        'schedule': crontab(minute='*/5'),
+    },
 }
