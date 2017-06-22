@@ -23,9 +23,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '(op6ksp@a*-kl%m@tn=r^r7u%c7u)7fzz%^#5f*3#yjt_m-6g)'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
@@ -135,11 +132,6 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'assets'),)
 DOWNLOADABLE_FILES = os.path.abspath(os.path.join(BASE_DIR, 'files'))
 
 
-# email settings
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 1025
-DEFAULT_FROM_EMAIL = 'admin@test.loc'
-
 # registration
 ACCOUNT_ACTIVATION_DAYS = 7
 LOGIN_URL = '/accounts/login/'
@@ -168,3 +160,11 @@ CELERYBEAT_SCHEDULE = {
         'schedule': crontab(minute='*/5'),
     },
 }
+
+
+# trying import settings
+try:
+    from .production import *
+except ImportError as e:
+    from .development import *
+    print(e)

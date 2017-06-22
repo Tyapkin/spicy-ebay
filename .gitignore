@@ -105,3 +105,6 @@ ENV/
 .idea/vcs.xml
 media/
 *.pid
+
+# ignore development settings file
+development.py
