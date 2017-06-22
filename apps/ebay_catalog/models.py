@@ -35,4 +35,6 @@ class Product(models.Model):
         # If qty > 0 then set in_stock to True
         if self.qty > 0:
             self.in_stock = True
+        else:
+            self.in_stock = False
         super(Product, self).save(*args, **kwargs)
