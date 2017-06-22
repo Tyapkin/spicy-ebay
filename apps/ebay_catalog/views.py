@@ -146,7 +146,6 @@ class DeleteProductView(DeleteView):
 
 
 def download(request, path):
-    # TODO: fix it. This not work.
     file_path = settings.DOWNLOADABLE_FILES + '/' + path
     print(file_path)
     if os.path.exists(file_path):
