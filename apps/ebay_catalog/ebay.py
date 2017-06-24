@@ -1,6 +1,10 @@
 from django.conf import settings
 import requests
 import json
+import logging
+import traceback
+
+logger = logging.getLogger(__name__)
 
 
 TYPES = {
@@ -75,11 +79,11 @@ class GetProductByUPC:
                             'itemId': content['searchResult'][0]['item'][i]['itemId'][0]
                         })
                     except Exception as e:
-                        print(e)
+                        logger.error('{}. Trace: {}'.format(e, traceback.format_exc(limit=10)))
                         continue
                 return results
             else:
-                print(content['errorMessage'])
+                logger.warning('Error: {}'.format(content['errorMessage']))
         else:
             return 'Error'
 
@@ -114,9 +118,10 @@ class GetSingleItem:
             if product['Ack'] == STATUS:
                 return product['Item']
             else:
-                print('{}: {} Classification: {}'.format(product['Errors'][0]['SeverityCode'],
-                                                         product['Errors'][0]['ShortMessage'],
-                                                         product['Errors'][0]['ErrorClassification']))
+                logger.warning('{}: {} Classification: {}'.format(product['Errors'][0]['SeverityCode'],
+                                                                  product['Errors'][0]['ShortMessage'],
+                                                                  product['Errors'][0]['ErrorClassification']))
                 return 'Error'
         else:
+            logger.error('Response: {}'.format(resp.status_code))
             return 'Error'
