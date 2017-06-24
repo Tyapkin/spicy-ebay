@@ -168,7 +168,7 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
+            'formatter': 'simple'
         },
         'file': {
             'level': 'DEBUG',
@@ -183,6 +183,11 @@ LOGGING = {
             'handlers': ['file', 'console'],
             'propagate': True,
             'level': 'DEBUG'
+        },
+        'apps.accounts': {
+            'handlers': ['file'],
+            'propagate': True,
+            'level': 'WARNING'
         }
     }
 }
