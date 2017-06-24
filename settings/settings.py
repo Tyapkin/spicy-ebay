@@ -187,7 +187,7 @@ LOGGING = {
         'apps.accounts': {
             'handlers': ['file'],
             'propagate': True,
-            'level': 'WARNING'
+            'level': 'INFO'
         }
     }
 }
