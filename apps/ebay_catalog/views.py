@@ -1,8 +1,10 @@
-import csv, os
-from datetime import date
+import csv
+import os
+import logging
+import traceback
+from datetime import date, datetime
 from django.shortcuts import render, redirect
 from django.views.generic import View, TemplateView, DeleteView
-from django.views.generic.base import ContextMixin
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core import serializers
 from django.contrib import messages
@@ -11,6 +13,8 @@ from django.conf import settings
 
 from .models import Product
 from .ebay import GetProductByUPC, GetSingleItem
+
+logger = logging.getLogger(__name__)
 
 
 class IndexView(TemplateView):
@@ -25,6 +29,7 @@ class GetProductsListView(View):
             json_data = serializers.serialize('json', queryset)
             return HttpResponse(json_data, content_type='application/json')
         else:
+            logger.error('Request Method: {}; Is AJAX: {}'.format(self.request.method, self.request.is_ajax()))
             raise Http404()
 
 
@@ -56,7 +61,7 @@ class ProductCreatedView(View):
                     )
                     self.items_added += 1
                 except Exception as e:
-                    # TODO: logging needs
+                    logger.error('{}. Trace: {}'.format(e, traceback.format_exc(limit=10)))
                     self.items_missed += 1
                     continue
             messages.success(self.request, self.success_msg.format(product_id, self.items_added, self.items_missed))
@@ -112,7 +117,7 @@ class CsvImportView(View):
                 )
                 self.success_item += 1
             except Exception as e:
-                print(e)
+                logger.error('{}. Trace: {}'.format(e, traceback.format_exc(limit=10)))
                 self.missed_item += 1
                 continue
         messages.success(self.request, self.msg.format(self.success_item, self.missed_item))
@@ -133,7 +138,8 @@ class CsvImportView(View):
         try:
             csvfile = open(filepath, newline='')
             csvreader = csv.reader(csvfile, delimiter='\n')
-        except IOError:
+        except IOError as e:
+            logger.warning('{}. Trace: {}'.format(e, traceback.format_exc(limit=10)))
             raise IOError
 
         return csvreader
@@ -142,7 +148,10 @@ class CsvImportView(View):
 class DeleteProductView(DeleteView):
     model = Product
     template_name = 'product_delete_form.html'
-    success_url = reverse_lazy('index')
+
+    def get_success_url(self):
+        logger.info('Product: {} deleted. User: {}; Time: {}'.format(self.object, self.request.user, datetime.now()))
+        return reverse_lazy('index')
 
 
 def download(request, path):
